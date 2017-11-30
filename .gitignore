@@ -6,3 +6,7 @@ tsp_heuristic/x64/
 *.filters
 
 *.user
+
+sat2/\.vs/sat2/v15/
+
+sat2/x64/Debug/
