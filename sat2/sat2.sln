@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sat2", "sat2.vcxproj", "{475682A9-F502-40C6-A71C-97D05DA3AC72}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sat2_test", "..\sat2_test\sat2_test.vcxproj", "{082C9FA4-68E2-4A12-B948-8A3577CED74B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{475682A9-F502-40C6-A71C-97D05DA3AC72}.Release|x64.Build.0 = Release|x64
 		{475682A9-F502-40C6-A71C-97D05DA3AC72}.Release|x86.ActiveCfg = Release|Win32
 		{475682A9-F502-40C6-A71C-97D05DA3AC72}.Release|x86.Build.0 = Release|Win32
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Debug|x64.ActiveCfg = Debug|x64
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Debug|x64.Build.0 = Debug|x64
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Debug|x86.ActiveCfg = Debug|Win32
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Debug|x86.Build.0 = Debug|Win32
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Release|x64.ActiveCfg = Release|x64
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Release|x64.Build.0 = Release|x64
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Release|x86.ActiveCfg = Release|Win32
+		{082C9FA4-68E2-4A12-B948-8A3577CED74B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

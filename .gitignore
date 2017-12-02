@@ -10,3 +10,5 @@ tsp_heuristic/x64/
 sat2/\.vs/sat2/v15/
 
 sat2/x64/Debug/
+
+sat2_test/x64/Debug/

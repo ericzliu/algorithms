@@ -1,3 +1,4 @@
+#include "sat2.hpp"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -10,128 +11,97 @@
 #include <cmath>
 using namespace std;
 
-struct directed_graph {
-  vector<int> _empty_vec;
-  unordered_map< int, vector< int > > _adjacency_list;
+void directed_graph::add_edge(int u, int v) {
+  _adjacency_list[u].push_back(v);
+}
 
-  auto begin_iterate() {
-    return begin(_adjacency_list);
+vector< int > & directed_graph::get_edges(int u) {
+  if (_adjacency_list.count(u) > 0)
+  {
+    return _adjacency_list[u];
   }
+  return _empty_vec;
+}
 
-  auto end_iterate() {
-    return begin(_adjacency_list);
+directed_graph directed_graph::transpose() {
+  directed_graph digraph;
+  for (auto& u : _adjacency_list) {
+    for (auto& v : u.second) {
+      digraph.add_edge(v, u.first);
+    }
   }
+  return digraph;
+}
 
-  void add_edge(int u, int v) {
-    _adjacency_list[u].push_back(v);
-  }
-
-  vector< int > & get_edges(int u) {
-    if (_adjacency_list.count(u) > 0)
+kosaraju::kosaraju(directed_graph& graph) {
+  vector< int > visit_ordre;
+  unordered_set< int > visited;
+  for (auto u = graph.begin_iterate(); u != graph.end_iterate(); u++) {
+    if (visited.count(u->first) == 0)
     {
-      return _adjacency_list[u];
-    }
-    return _empty_vec;
-  }
-
-  auto transpose() {
-    directed_graph digraph;
-    for (auto& u : _adjacency_list) {
-      for (auto& v : u.second) {
-        digraph.add_edge(v, u.first);
-      }
-    }
-    return digraph;
-  }
-};
-
-struct kosaraju
-{
-  unordered_map< int, int > _scc;
-  kosaraju(directed_graph& graph) {
-    vector< int > visit_ordre;
-    unordered_set< int > visited;
-    for (auto u = graph.begin_iterate(); u != graph.end_iterate(); u++) {
-      if (visited.count(u->first) == 0)
-      {
-        dfs(graph, u->first, visited, visit_ordre);
-      }
-    }
-    auto trans_graph = graph.transpose();
-    unsigned scc = 0;
-    unordered_set< int > visited2;
-    for (auto u = rbegin(visit_ordre); u != rend(visit_ordre); u++) {
-      if (visited2.count(*u) == 0)
-      {
-        dfs2(trans_graph, *u, ++scc, visited2);
-      }
+      dfs(graph, u->first, visited, visit_ordre);
     }
   }
-
-  void dfs(directed_graph& graph, int u, unordered_set< int > & visited, vector< int > & visit_ordre) {
-    stack< int > s;
-    s.push(u);
-    visited.insert(u);
-    while (!s.empty())
+  auto trans_graph = graph.transpose();
+  unsigned scc = 0;
+  unordered_set< int > visited2;
+  for (auto u = rbegin(visit_ordre); u != rend(visit_ordre); u++) {
+    if (visited2.count(*u) == 0)
     {
-      auto u = s.top();
-      auto& out_edges = graph.get_edges(u);
-      bool finished = true;
-      for (auto v : out_edges) {
-        if (visited.count(v) == 0) {
-          s.push(v);
-          visited.insert(v);
-          finished = false;
-        }
+      dfs2(trans_graph, *u, ++scc, visited2);
+    }
+  }
+}
+
+void kosaraju::dfs(directed_graph& graph, int u, unordered_set< int > & visited, vector< int > & visit_ordre) {
+  stack< int > s;
+  s.push(u);
+  visited.insert(u);
+  while (!s.empty())
+  {
+    auto u = s.top();
+    auto& out_edges = graph.get_edges(u);
+    bool finished = true;
+    for (auto v : out_edges) {
+      if (visited.count(v) == 0) {
+        s.push(v);
+        visited.insert(v);
+        finished = false;
       }
-      if (finished) {
-        s.pop();
-        visit_ordre.push_back(u);
+    }
+    if (finished) {
+      s.pop();
+      visit_ordre.push_back(u);
+    }
+  }
+}
+
+void kosaraju::dfs2(directed_graph& graph, int s, int num, unordered_set< int > & visited) {
+  stack< int > pile;
+  pile.push(s);
+  visited.insert(s);
+  _scc[s] = num;
+  while (!pile.empty())
+  {
+    auto u = pile.top();
+    pile.pop();
+    auto& out_edges = graph.get_edges(u);
+    for (auto v : out_edges) {
+      if (visited.count(v) == 0) {
+        pile.push(v);
+        visited.insert(v);
+        _scc[v] = num;
       }
     }
   }
+}
 
-  void dfs2(directed_graph& graph, int s, int num, unordered_set< int > & visited) {
-    stack< int > pile;
-    pile.push(s);
-    visited.insert(s);
-    _scc[s] = num;
-    while (!pile.empty())
-    {
-      auto u = pile.top();
-      pile.pop();
-      auto& out_edges = graph.get_edges(u);
-      for (auto v : out_edges) {
-        if (visited.count(v) == 0) {
-          pile.push(v);
-          visited.insert(v);
-          _scc[v] = num;
-        }
-      }
-    }
+int kosaraju::get_scc(int u) {
+  if (_scc.count(u) > 0) {
+    return _scc[u];
   }
-
-  int get_scc(int u) {
-    if (_scc.count(u) > 0) {
-      return _scc[u];
-    }
-    return 0;
-  }
-};
-
-struct expression
-{
-  vector< pair< int, int > > _clauses;
-  void add_clause(int p, int q) {
-    _clauses.push_back(make_pair(p, q));
-  }
-  auto begin_iterate() {
-    return _clauses.begin();
-  }
-  auto end_iterate() {
-    return _clauses.end();
-  }
-};
+  return 0;
+}
 
 ostream& operator<< (ostream& os, pair<int, int> const& clause) {
   os << "(";
